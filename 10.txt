@@ -1,0 +1,100 @@
+Prathamesh lavange 
+B-25 
+#include <iostream>
+#include <stack>
+#include <string>
+#include <cctype> // for isdigit
+
+using namespace std;
+
+// Function to check precedence of operators
+int precedence(char op) {
+    if (op == '+' || op == '-') return 1;
+    if (op == '*' || op == '/') return 2;
+    return 0;
+}
+
+// Function to convert infix to postfix
+string infixToPostfix(const string& infix) {
+    stack<char> operators;
+    string postfix = "";
+
+    for (char ch : infix) {
+        // If character is an operand, add it to the output
+        if (isalnum(ch)) {
+            postfix += ch;
+        }
+        // If character is '(', push it to the stack
+        else if (ch == '(') {
+            operators.push(ch);
+        }
+        // If character is ')', pop and output until '(' is found
+        else if (ch == ')') {
+            while (!operators.empty() && operators.top() != '(') {
+                postfix += operators.top();
+                operators.pop();
+            }
+            operators.pop(); // Remove '(' from the stack
+        }
+        // Operator encountered
+        else {
+            while (!operators.empty() && precedence(operators.top()) >= precedence(ch)) {
+                postfix += operators.top();
+                operators.pop();
+            }
+            operators.push(ch);
+        }
+    }
+
+    // Pop all the operators left in the stack
+    while (!operators.empty()) {
+        postfix += operators.top();
+        operators.pop();
+    }
+
+    return postfix;
+}
+
+// Function to evaluate postfix expression
+int evaluatePostfix(const string& postfix) {
+    stack<int> values;
+
+    for (char ch : postfix) {
+        // If character is an operand, push it to the stack as an integer
+        if (isdigit(ch)) {
+            values.push(ch - '0'); // Convert char to int
+        }
+        // Operator encountered
+        else {
+            int val2 = values.top();
+            values.pop();
+            int val1 = values.top();
+            values.pop();
+
+            switch (ch) {
+                case '+': values.push(val1 + val2); break;
+                case '-': values.push(val1 - val2); break;
+                case '*': values.push(val1 * val2); break;
+                case '/': values.push(val1 / val2); break;
+            }
+        }
+    }
+
+    return values.top(); // Final result will be at the top of the stack
+}
+
+int main() {
+    string infix;
+    cout << "Enter infix expression: ";
+    cin >> infix;
+
+    // Convert infix to postfix
+    string postfix = infixToPostfix(infix);
+    cout << "Postfix expression: " << postfix << endl;
+
+    // Evaluate postfix expression
+    int result = evaluatePostfix(postfix);
+    cout << "Result of postfix evaluation: " << result << endl;
+
+    return 0;
+}

@@ -1,0 +1,69 @@
+Prathamesh lavange 
+B-25 
+#include <iostream>
+#include <stack>
+#include <cctype>    // for std::tolower and std::isalnum
+#include <string>
+using namespace std;
+
+// Function to print the original string and its reversed version using a stack
+void printOriginalAndReversed(string str) {
+    stack<char> charStack;
+    string cleanedString = "";
+
+    for (char ch : str) {
+        if (isalnum(ch)) {
+            ch = tolower(ch);
+            charStack.push(ch);
+            cleanedString += ch;
+        }
+    }
+    cout << "Original cleaned string: " << cleanedString << endl;
+
+    // Pop characters from the stack to form the reversed string
+    string reversedString = "";
+    while (!charStack.empty()) {
+        reversedString += charStack.top();
+        charStack.pop();
+    }
+
+    // Print reversed string
+    cout << "Reversed string: " << reversedString << endl;
+}
+
+
+bool isPalindrome(string str) {
+    string cleanedString = "";
+
+      for (char ch : str) {
+        if (isalnum(ch)) {
+            cleanedString += tolower(ch);
+        }
+    }
+
+    // Check if cleaned string is the same forward and backward
+    int n = cleanedString.size();
+    for (int i = 0; i < n / 2; i++) {
+        if (cleanedString[i] != cleanedString[n - i - 1]) {
+            return false;
+        }
+    }
+    return true;
+}
+
+int main() {
+    string input;
+    cout << "Enter a string: ";
+    getline(cin, input);
+
+    printOriginalAndReversed(input);
+
+    // Check if the string is a palindrome and print the result
+    if (isPalindrome(input)) {
+        cout << "The string is a palindrome." << endl;
+    } else {
+        cout << "The string is not a palindrome." << endl;
+    }
+
+    return 0;
+}

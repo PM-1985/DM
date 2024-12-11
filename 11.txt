@@ -1,0 +1,88 @@
+Prathamesh lavange 
+B-25 
+#include <iostream>
+#include <queue>
+#include <string>
+
+using namespace std;
+
+// Job struct to represent a job in the queue
+struct Job {
+    int id;
+    string description;
+
+    Job(int jobId, string jobDescription) : id(jobId), description(jobDescription) {}
+};
+
+// Function to add a job to the queue
+void addJob(queue<Job>& jobQueue, int id, const string& description) {
+    Job newJob(id, description);
+    jobQueue.push(newJob);
+    cout << "Job added: ID = " << id << ", Description = " << description << endl;
+}
+
+// Function to delete a job from the queue
+void deleteJob(queue<Job>& jobQueue) {
+    if (jobQueue.empty()) {
+        cout << "No jobs in the queue to delete." << endl;
+    } else {
+        Job job = jobQueue.front();
+        jobQueue.pop();
+        cout << "Job deleted: ID = " << job.id << ", Description = " << job.description << endl;
+    }
+}
+
+// Function to display all jobs in the queue
+void displayJobs(const queue<Job>& jobQueue) {
+    if (jobQueue.empty()) {
+        cout << "No jobs in the queue." << endl;
+    } else {
+        cout << "Current jobs in the queue:" << endl;
+        queue<Job> tempQueue = jobQueue; // Copy the queue for display purposes
+        while (!tempQueue.empty()) {
+            Job job = tempQueue.front();
+            cout << "ID = " << job.id << ", Description = " << job.description << endl;
+            tempQueue.pop();
+        }
+    }
+}
+
+int main() {
+    queue<Job> jobQueue;
+    int choice, jobId;
+    string jobDescription;
+
+    do {
+        cout << "\nJob Queue Menu:\n";
+        cout << "1. Add Job\n";
+        cout << "2. Delete Job\n";
+        cout << "3. Display Jobs\n";
+        cout << "4. Exit\n";
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1:
+                cout << "Enter Job ID: ";
+                cin >> jobId;
+                cin.ignore(); // Ignore leftover newline character
+                cout << "Enter Job Description: ";
+                getline(cin, jobDescription);
+                addJob(jobQueue, jobId, jobDescription);
+                break;
+            case 2:
+                deleteJob(jobQueue);
+                break;
+            case 3:
+                displayJobs(jobQueue);
+                break;
+            case 4:
+                cout << "Exiting program." << endl;
+                break;
+            default:
+                cout << "Invalid choice. Please try again." << endl;
+        }
+    } while (choice != 4);
+
+    return 0;
+}

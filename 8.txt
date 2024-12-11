@@ -1,0 +1,156 @@
+Prathamesh lavange 
+B-25 
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Node {
+public:
+    string student;
+    Node* next;
+
+    Node(string s) {
+        student = s;
+        next = nullptr;
+    }
+};
+
+class Set {
+public:
+    Node* head;
+
+    Set() {
+        head = nullptr;
+    }
+
+    // Insert a new student into the set (linked list)
+    void insert(string student) {
+        Node* newNode = new Node(student);
+        if (head == nullptr) {
+            head = newNode;
+        } else {
+            Node* temp = head;
+            while (temp->next != nullptr) {
+                temp = temp->next;
+            }
+            temp->next = newNode;
+        }
+    }
+
+    // Display all students in the set
+    void display() {
+        Node* temp = head;
+        while (temp != nullptr) {
+            cout << temp->student << " ";
+            temp = temp->next;
+        }
+        cout << endl;
+    }
+
+    // Check if a student exists in the set
+    bool exists(string student) {
+        Node* temp = head;
+        while (temp != nullptr) {
+            if (temp->student == student) {
+                return true;
+            }
+            temp = temp->next;
+        }
+        return false;
+    }
+
+    // Union of two sets
+    Set unionSet(Set& B) {
+        Set result;
+        Node* temp = head;
+
+        // Add all elements from set A
+        while (temp != nullptr) {
+            result.insert(temp->student);
+            temp = temp->next;
+        }
+
+        // Add elements from set B if they are not already in set A
+        temp = B.head;
+        while (temp != nullptr) {
+            if (!exists(temp->student)) {
+                result.insert(temp->student);
+            }
+            temp = temp->next;
+        }
+
+        return result;
+    }
+
+    // Intersection of two sets
+    Set intersectionSet(Set& B) {
+        Set result;
+        Node* temp = head;
+
+        // Add elements that exist in both sets
+        while (temp != nullptr) {
+            if (B.exists(temp->student)) {
+                result.insert(temp->student);
+            }
+            temp = temp->next;
+        }
+
+        return result;
+    }
+
+    // Count number of students in the set
+    int count() {
+        int count = 0;
+        Node* temp = head;
+        while (temp != nullptr) {
+            count++;
+            temp = temp->next;
+        }
+        return count;
+    }
+};
+
+int main() {
+    Set vanilla, butterscotch;
+
+    int totalStudents, n;
+    string student;
+
+    // Input the total number of students in the class
+    cout << "Enter the total number of students in the class: ";
+    cin >> totalStudents;
+
+    // Input the students who like Vanilla ice-cream
+    cout << "Enter number of students who like Vanilla ice-cream: ";
+    cin >> n;
+    cout << "Enter the names of students who like Vanilla ice-cream:\n";
+    for (int i = 0; i < n; i++) {
+        cin >> student;
+        vanilla.insert(student);
+    }
+
+    // Input the students who like Butterscotch ice-cream
+    cout << "Enter number of students who like Butterscotch ice-cream: ";
+    cin >> n;
+    cout << "Enter the names of students who like Butterscotch ice-cream:\n";
+    for (int i = 0; i < n; i++) {
+        cin >> student;
+        butterscotch.insert(student);
+    }
+
+    // a. Students who like either vanilla or butterscotch or both (Union)
+    Set eitherVanillaOrButterscotch = vanilla.unionSet(butterscotch);
+    cout << "\nStudents who like either Vanilla or Butterscotch or both: ";
+    eitherVanillaOrButterscotch.display();
+
+    // b. Students who like both vanilla and butterscotch (Intersection)
+    Set bothVanillaAndButterscotch = vanilla.intersectionSet(butterscotch);
+    cout << "\nStudents who like both Vanilla and Butterscotch: ";
+    bothVanillaAndButterscotch.display();
+
+    // c. Number of students who like neither vanilla nor butterscotch
+    int neither = totalStudents - eitherVanillaOrButterscotch.count();
+    cout << "\nNumber of students who like neither Vanilla nor Butterscotch: " << neither << endl;
+
+    return 0;
+}
